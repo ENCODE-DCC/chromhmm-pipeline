@@ -2,7 +2,8 @@ const request = require('request');
 const qs = require('querystring');
 
 module.exports = {
-	read_accession: read_accession
+	read_accession: read_accession,
+	read_encode: read
 }
 
 //making 2 requests here, more efficient than letting portal redirect me though (1 second-ish vs 10)
@@ -10,14 +11,14 @@ module.exports = {
 async function read_accession(accession) {
 	return new Promise((resolve, reject) => {
 		read(
-			"https://www.encodeproject.org/search/?" + qs.stringify({
+			"/search/?" + qs.stringify({
 				searchTerm: accession,
 				format: "json",
 			})
 		).then(
 			// searched by accession up top, so dont need to verify stuff
 			(search) => {
-				read("https://www.encodeproject.org/" + search["@graph"][0]["@id"] + "?format=json").then(
+				read(search["@graph"][0]["@id"] + "?format=json").then(
 					(result) => { resolve(result) },//  maybe add error checking here (check  to  see if search[graph][0][id] contains target accession)
 					(err) => { reject(err) }
 				)
@@ -30,7 +31,7 @@ async function read_accession(accession) {
 async function read(uri) {
 	return new Promise((resolve, reject) => {
 		request.get(
-			uri,
+			"https://www.encodeproject.org" + uri,
 			{ format: "json" },
 			(err, res, body) => {
 				if (err) {
