@@ -1,8 +1,10 @@
+const utils = require("./util.js");
+const cfg = require('./config.json')
+
 async function build_accession_graph(reference_epigenome_accession) {
 	return new Promise((resolve, reject) => {
 		var out = [];
-		const utils = require("./util.js");
-		const cfg = require('./config.json')
+		var need = 0;
 		utils.read_accession(reference_epigenome_accession).then(
 			(success) => {
 				var filtered_accession = success["related_datasets"]
