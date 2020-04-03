@@ -1,31 +1,62 @@
-async function main() {
-	const search = require('./search')
-	const { assays } = require('./config.json');
-	var outputArrays = [];
-	for (var a in assays) {
-		outputArrays.push(await searchAssay(assays[a]));
-		// console.error(a)
-	}
-	var experiments = merge(outputArrays);
-	//search for the controls
-	// var tmp = experiments.map((val) => getControl(val))
-	var out = []
-	//let the searches resolve
-	for (var i in experiments) {
-		console.error(i)
-		var controls = await getControl(experiments[i]);
-		for (var c in controls) {
-			var control = controls[c]
-			if (!out[control]) {
-				var tmp = await getExperiments(control)
-				out[control] = tmp["@graph"].reduce((prev, curr, index) => {
+async function build_accession_graph(reference_epigenome_accession) {
+	return new Promise((resolve, reject) => {
+		var out = [];
+		const utils = require("./util.js");
+		const cfg = require('./config.json')
+		utils.read_accession(reference_epigenome_accession).then(
+			(success) => {
+				var filtered_accession = success["related_datasets"]
+					.filter((val) => {
+						return (
+							// can ignore control here because we find that from assays
+							// val.assay_title == "Control ChIP-seq" || 
+							val.target && val.target.label && cfg.assays.includes(val.target.label))
 
-				});
-				// console.log(JSON.stringify(out[control]["@graph"].map((val) => val.accession)));
-			}
-		}
-	}
-	return out;
+					})
+					.map((val) => {
+						return {
+							label: val.target.label,
+							accession: val.accession,
+							title: val.assay_title
+						}
+					})
+				filtered_accession.map((val) => {
+					// do this for each accession
+					utils.read_accession(val.accession).then(
+						(data) => {
+							var signal = data.files
+								.filter((val) => { return val.assembly == "GRCh38" && val.output_type == "signal p-value" })[0]
+							utils.read_accession(signal.accession).then(
+								(success) => {
+									out.push({
+										mark: val.label,
+										derived: success.derived_from
+									})
+									if (out.length >= filtered_accession.length) {
+										resolve(out)
+									}
+								},
+								(fail) => (reject(fail))
+							)
+
+						},
+						(fail) => (reject(fail))
+
+					)
+
+				})
+
+			},
+			(fail) => (reject(fail))
+		)
+
+	});
 }
 
-main(); i
+
+
+
+build_accession_graph("ENCSR840QYF").then(
+	(success) => { console.log(JSON.stringify(success)) },
+	(fail) => { console.error(fail) }
+)
