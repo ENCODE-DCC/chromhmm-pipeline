@@ -1,0 +1,14 @@
+mkdir $1
+echo "Map" > $1/log
+node node/app.js $1 >> $1/log
+echo "Download" >> $1/log
+mkdir ./$1/bam
+./$1/downloadScript >> $1/log
+echo "Binarize" >> $1/log
+java -mx12G -jar ChromHMM/ChromHMM.jar BinarizeBam ChromHMM/CHROMSIZES/hg38.txt $1/bam/ $1/markTable $1/binarize >> $1/log
+echo "Model" >> $1/log
+java -mx12G -jar ChromHMM/ChromHMM.jar LearnModel $1/binarize $1/OUTPUT 10 hg38 >> $1/log
+echo "Copy to Bucket" >> $1/log
+gsutil -m cp -r $1/binarize/ gs://chrom-hmm-runs/$1/binarize/ >> $1/log
+gsutil -m cp -r $1/OUTPUT/ gs://chrom-hmm-runs/$1/OUTPUT >> $1/log
+gsutil cp $1/markTable gs://chrom-hmm-runs/$1/markTable >> $1/log
