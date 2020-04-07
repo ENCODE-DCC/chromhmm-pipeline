@@ -1,0 +1,2 @@
+sudo apt install -y aws-cli nodejs npm default-jre
+git clone https://github.com/jernst98/ChromHMM.git
