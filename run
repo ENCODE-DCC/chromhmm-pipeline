@@ -12,3 +12,5 @@ echo "Copy to Bucket" >> $1/log
 gsutil -m cp -r $1/binarize/ gs://chrom-hmm-runs/$1/binarize/ >> $1/log
 gsutil -m cp -r $1/OUTPUT/ gs://chrom-hmm-runs/$1/OUTPUT >> $1/log
 gsutil cp $1/markTable gs://chrom-hmm-runs/$1/markTable >> $1/log
+# When done, shutdown automatically
+sudo shutdown
