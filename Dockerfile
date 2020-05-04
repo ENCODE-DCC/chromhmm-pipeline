@@ -5,9 +5,9 @@ LABEL maintainer.email "encode-help@lists.stanford.edu"
 
 # doing this up here to not deal with interactive junk below
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get -y install tzdata
 
 RUN apt update && \
+	apt -y install tzdata && \
 	apt install -y nodejs npm default-jre
 RUN git clone https://github.com/jernst98/ChromHMM.git
 
