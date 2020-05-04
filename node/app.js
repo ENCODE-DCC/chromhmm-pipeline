@@ -145,21 +145,23 @@ build_accession_graph(targetDataset).then(
 	(fail) => { console.error(fail) }
 )
 function write_markTable_and_downloadScript(markTable, download) {
-	fs.writeFileSync(`./${targetDataset}/markTable`, markTable);
+	fs.writeFileSync(`markTable`, markTable);
 	var d = "";
 	for (var e in download) {
-		d += `aws s3 cp ${download[e]} ./${targetDataset}/bam/${e}.bam\n`
+		// d += `aws s3 cp ${download[e]} ./${targetDataset}/bam/${e}.bam\n`
+		d += `${download[e]}\n`
 	}
-	fs.writeFileSync(`./${targetDataset}/downloadScript`, d, { mode: 0o755 });
+	// fs.writeFileSync(`./${targetDataset}/downloadScript`, d, { mode: 0o755 });
+	fs.writeFileSync(`fileList`, d, { mode: 0o755 });
 }
 
 
 
-// Stomach: ENCSR840QYF
-// Sigmoid colon: ENCSR816KBS
-// Transverse Colon: ENCSR654ORD //  use this, seem to be some interesting edge cases
-// Upper Lobe of Left Lung: ENCSR191PVZ
-// Spleen: ENCSR211RGU
+// 2  Stomach: ENCSR840QYF
+// 3  Sigmoid colon: ENCSR816KBS
+// 0  Transverse Colon: ENCSR654ORD //  use this, seem to be some interesting edge cases
+// 4  Upper Lobe of Left Lung: ENCSR191PVZ
+// 5  Spleen: ENCSR211RGU
 
 // new Promise((resolve, reject) => {
 // 	build_accession_graph("ENCSR840QYF").then(
