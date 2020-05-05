@@ -1,0 +1,2 @@
+sudo apt update && sudo apt install -y awscli nodejs npm default-jre
+git clone https://github.com/jernst98/ChromHMM.git
