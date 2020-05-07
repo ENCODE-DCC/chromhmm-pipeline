@@ -74,7 +74,7 @@ task map_experiment {
     String accession
 
     command {
-        node node/app.js ${accession}
+        node $(which app.js) ${accession}
         mkdir bams
         cat fileList | while read line; do aws s3 cp $line bams/; done
     }
@@ -121,7 +121,7 @@ task binarize {
      Int bin_size
      
     command {
-        java -Xmx16G -jar ChromHMM/ChromHMM.jar BinarizeBam -b ${bin_size} ChromHMM/CHROMSIZES/hg38.txt ${bams} markTable binarize
+        java -Xmx16G -jar $(which ChromHMM.jar) BinarizeBam -b ${bin_size} ChromHMM/CHROMSIZES/hg38.txt ${bams} markTable binarize
     }
 
     output {
@@ -142,7 +142,7 @@ task model {
      Int bin_size
      Int states
     command {
-        java -Xmx18G -jar ChromHMM/ChromHMM.jar LearnModel -b ${bin_size} -p 0 binarize OUTPUT ${states} hg38
+        java -Xmx18G -jar $(which ChromHMM.jar) LearnModel -b ${bin_size} -p 0 ${binarized} OUTPUT ${states} hg38
      }
 
     output {
