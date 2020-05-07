@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt update
 RUN apt install -y tzdata && \
-	apt install -y nodejs npm default-jre git
+	apt install -y nodejs npm default-jre awscli git
 COPY node/* node/
 RUN cd node && npm i && cd ..
 RUN git clone https://github.com/jernst98/ChromHMM.git
