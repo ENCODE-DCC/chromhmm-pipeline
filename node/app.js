@@ -152,7 +152,7 @@ function write_markTable_and_downloadScript(markTable, download) {
 		d += `${download[e]}\n`
 	}
 	// fs.writeFileSync(`./${targetDataset}/downloadScript`, d, { mode: 0o755 });
-	fs.writeFileSync(`fileList`, d, { mode: 0o755 });
+	fs.writeFileSync(`fileList`, d);
 }
 
 
@@ -162,6 +162,18 @@ function write_markTable_and_downloadScript(markTable, download) {
 // 0  Transverse Colon: ENCSR654ORD //  use this, seem to be some interesting edge cases
 // 4  Upper Lobe of Left Lung: ENCSR191PVZ
 // 5  Spleen: ENCSR211RGU
+
+
+// Stomach: ENCSR840QYF
+// Sigmoid colon: ENCSR816KBS
+// Transverse Colon: ENCSR654ORD
+// Upper Lobe of Left Lung: ENCSR191PVZ
+// Spleen: ENCSR211RGU
+// H1: ENCSR938GXK
+// IMR-90: ENCSR596VTT
+// H9: ENCSR673EAQ
+// A549: ENCSR706RZK
+// SK-N-SH: ENCSR256OEH
 
 // new Promise((resolve, reject) => {
 // 	build_accession_graph("ENCSR840QYF").then(
