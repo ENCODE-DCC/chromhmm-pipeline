@@ -5,11 +5,11 @@
 
 workflow chromhmm {
     #inputs if im using the auto find script, requiring this
-    String epigenomics_accession
+    # String epigenomics_accession
 
     # # if i have already generated markTable
-    # File? markTable
-    # Array[File]? bams # be able to generate this from markTable
+    File markTable
+    Array[File] bams # be able to generate this from markTable
 
     # # If I already have the binarized, just straight to learn?
 
@@ -18,14 +18,10 @@ workflow chromhmm {
     Int states = 10
     Int bin_size = 200
 
-    call map_experiment {
-            input: accession = epigenomics_accession
-    }
-
     call binarize {
         input:
-            bams = map_experiment.bams,
-            markTable = map_experiment.markTable,
+            bams = bams,
+            markTable = markTable,
             bin_size = bin_size
     }
 
@@ -70,50 +66,6 @@ workflow chromhmm {
 
 }
 
-task map_experiment {
-    String accession
-
-    command {
-        node /node/app.js ${accession}
-        mkdir bams
-        cat fileList | while read line; do aws s3 cp $line bams/; done
-    }
-
-    output {
-       File markTable = glob("markTable")[0]
-        # Is this needed if I never use it outside of task?
-        File fileList =  glob("fileList")[0]
-        Array[File] bams = glob("bams/*")
-    }
-
-    runtime {
-        cpu: 2
-        memory: "8 GB"
-        disks: "local-disk 250 SSD"
-    }
-}
-
-task files_from_markTable {
-    File markTable
-    command {
-        cat markTable| cut -f3-4| sed "s/     /\\
-/g" | cut -d . -f1 | sort | uniq | while read line; do curl https://www.encodeproject.org/files/$line/\?format=json | jq -r ".s3_uri"; done > fileList
-        mkdir bams
-        cat fileList | while read line; do aws s3 cp $line bams/; done
-    }
-    output {
-        # Is this needed if I never use it outside of task?
-        File fileList =  glob("fileList")[0]
-        Array[File] bams = glob("bams/*")
-    }
-    runtime {
-        cpu: 2
-        memory: "8GB"
-        disks: "local-disk 250 SSD"
-    }
-
-}
-
 task binarize {
     Array[File] bams # when interpolated, will this give me a directory or a list?
     File markTable
@@ -121,7 +73,9 @@ task binarize {
      Int bin_size
      
     command {
-        java -Xmx16G -jar /ChromHMM/ChromHMM.jar BinarizeBam -b ${bin_size} /ChromHMM/CHROMSIZES/hg38.txt ${bams} markTable binarize
+        mkdir /bams
+        mv ${bams sep=' /bams/; mv '} /bams/
+        java -Xmx16G -jar /ChromHMM/ChromHMM.jar BinarizeBam -b ${bin_size} -gzip /ChromHMM/CHROMSIZES/hg38.txt /bams/ markTable binarize
     }
 
     output {
@@ -142,14 +96,16 @@ task model {
      Int bin_size
      Int states
     command {
-        java -Xmx18G -jar /ChromHMM/ChromHMM.jar LearnModel -b ${bin_size} -p 0 ${binarized} OUTPUT ${states} hg38
+        mkdir /binarized
+        mv ${bams sep=' /binarized/; mv '} /binarized/
+        java -Xmx18G -jar /ChromHMM/ChromHMM.jar LearnModel -b ${bin_size} -p 0 /binarized OUTPUT ${states} hg38
      }
 
     output {
        Array[File] out = glob("OUTPUT/*")
     }
 
-     # when i gave it infinite processors, load doesnt really break 7
+     # when I gave it 100 processors, load doesnt really break 7
     runtime {
         cpu: 8
         memory: "20 GB"
