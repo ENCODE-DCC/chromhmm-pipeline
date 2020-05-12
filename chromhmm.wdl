@@ -74,8 +74,8 @@ task binarize {
      
     command {
         mkdir /bams
-        mv ${bams sep=' /bams/; mv '} /bams/
-        java -Xmx16G -jar /ChromHMM/ChromHMM.jar BinarizeBam -b ${bin_size} -gzip /ChromHMM/CHROMSIZES/hg38.txt /bams/ markTable binarize
+        mv ${sep=' /bams/; mv ' bams} /bams/
+        java -Xmx20G -jar /ChromHMM/ChromHMM.jar BinarizeBam -b ${bin_size} -gzip /ChromHMM/CHROMSIZES/hg38.txt /bams/ ${markTable} binarize
     }
 
     output {
@@ -84,8 +84,8 @@ task binarize {
 
      # runs fine at 128, might as well go double to play it safe
     runtime {
-        cpu: 4
-        memory: "20 GB"
+        cpu: 8
+        memory: "30 GB"
         disks: "local-disk 250 SSD"
     }
 }
@@ -97,8 +97,8 @@ task model {
      Int states
     command {
         mkdir /binarized
-        mv ${bams sep=' /binarized/; mv '} /binarized/
-        java -Xmx18G -jar /ChromHMM/ChromHMM.jar LearnModel -b ${bin_size} -p 0 /binarized OUTPUT ${states} hg38
+        mv ${sep=' /binarized/; mv ' binarized} /binarized/
+        java -Xmx20G -jar /ChromHMM/ChromHMM.jar LearnModel -b ${bin_size} -p 0 /binarized OUTPUT ${states} hg38
      }
 
     output {
@@ -108,7 +108,7 @@ task model {
      # when I gave it 100 processors, load doesnt really break 7
     runtime {
         cpu: 8
-        memory: "20 GB"
+        memory: "30 GB"
         disks: "local-disk 250 SSD"
     }
 }
