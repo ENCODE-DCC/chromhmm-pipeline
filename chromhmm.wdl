@@ -1,7 +1,7 @@
-# Maintainer: Otto Jolanki
+# Maintainer: Keshav Gurushankar
 
-#CAPER docker quay.io/encode-dcc/chromhmm-pipeline:template
-#CAPER singularity docker://quay.io/encode-dcc/chromhmm-pipeline:template
+#CAPER docker quay.io/encode-dcc/chromhmm-pipeline:1.0
+#CAPER singularity docker://quay.io/encode-dcc/chromhmm-pipeline:1.0
 
 workflow chromhmm {
     #inputs if im using the auto find script, requiring this
