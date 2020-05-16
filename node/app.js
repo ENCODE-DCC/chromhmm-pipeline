@@ -1,7 +1,7 @@
 const utils = require("./util.js");
 const cfg = require('./config.json')
 const fs = require('fs');
-const targetDataset = process.argv[2];
+const targetDataset = process.argv[2] || process.exit(1);
 
 async function build_accession_graph(reference_epigenome_accession) {
 	return new Promise((resolve, reject) => {
@@ -14,7 +14,8 @@ async function build_accession_graph(reference_epigenome_accession) {
 						return (
 							// can ignore control here because we find that from assays
 							// val.assay_title == "Control ChIP-seq" || 
-							val.target && val.target.label && cfg.assays.includes(val.target.label))
+							val.target && val.target.label && (cfg.assays.includes(val.target.label) || cfg.assays.length == 0)
+						)
 					})
 					.map((val) => {
 						return {
@@ -145,25 +146,30 @@ build_accession_graph(targetDataset).then(
 	(fail) => { console.error(fail) }
 )
 function write_markTable_and_downloadScript(markTable, download) {
-	fs.writeFileSync(`markTable`, markTable);
-	var d = "";
+	fs.writeFileSync(`${targetDataset}.markTable`, markTable);
+	var d = [];
 	for (var e in download) {
-		// d += `aws s3 cp ${download[e]} ./${targetDataset}/bam/${e}.bam\n`
-		d += `${download[e]}\n`
+		d.push(download[e])
 	}
-	// fs.writeFileSync(`./${targetDataset}/downloadScript`, d, { mode: 0o755 });
-	fs.writeFileSync(`fileList`, d);
+	fs.writeFileSync(`${targetDataset}.json`, JSON.stringify({
+		["chromhmm.bams"]: d
+		
+	}));
 }
 
+console.log(`cat ${targetDataset}.markTable | sort | uniq > ${targetDataset}.marktable2 && rm ${targetDataset}.markTable && cat ${targetDataset}.marktable2 | grep undefined.bam`)
+console.log(`gsutil mv ${targetDataset}.marktable2 gs://chromhmm-inputs/${targetDataset}/markTable.KS & mv ${targetDataset}-KS.json ../inputs/`)
 
 
-// 2  Stomach: ENCSR840QYF
-// 3  Sigmoid colon: ENCSR816KBS
-// 0  Transverse Colon: ENCSR654ORD //  use this, seem to be some interesting edge cases
-// 4  Upper Lobe of Left Lung: ENCSR191PVZ
-// 5  Spleen: ENCSR211RGU
+// Assays
+// "H3K27ac",
+// "H3K27me3",
+// "H3K36me3",
+// "H3K4me1",
+// "H3K4me3",
+// "H3K9me3"
 
-
+// Datasets
 // Stomach: ENCSR840QYF
 // Sigmoid colon: ENCSR816KBS
 // Transverse Colon: ENCSR654ORD
@@ -174,47 +180,3 @@ function write_markTable_and_downloadScript(markTable, download) {
 // H9: ENCSR673EAQ
 // A549: ENCSR706RZK
 // SK-N-SH: ENCSR256OEH
-
-// new Promise((resolve, reject) => {
-// 	build_accession_graph("ENCSR840QYF").then(
-// 		(success) => {
-// 			//save files as {accession}.bam, its not as readable, but more computer friendly
-// 			var out = { lines: [], files: [] };
-// 			success.map((val) => {
-
-// 			})
-// 		},
-// 		(fail) => { console.error(fail) }
-// 	)
-// });
-/*
-{
-	"mark": "H3K4me1",
-	"derived": [
-		"/files/ENCFF082EQW/",
-		"/files/ENCFF984GNG/"
-	]
-},
-cell${replicate#
-	} ${ mark } ${ accession }.bam ${ control_accession }.bam
-cell1	CTCF	cell1_CTCF.bam	cell1_control.bam
-cell2	CTCF	cell2_CTCF.bam	cell2_control.bam
-cell2	H3K27ac	cell2_H3K27ac.bam	cell2_control.bam
-cell1	H3K27ac	cell1_H3K27ac.bam	cell1_control.bam
-cell2	H3K27me3	cell2_H3K27me3.bam	cell2_control.bam
-cell1	H3K27me3	cell1_H3K27me3.bam	cell1_control.bam
-cell2	H3K36me3	cell2_H3K36me3.bam	cell2_control.bam
-cell1	H3K36me3	cell1_H3K36me3.bam	cell1_control.bam
-cell1	H3K4me1	cell1_H3K4me1.bam	cell1_control.bam
-cell2	H3K4me1	cell2_H3K4me1.bam	cell2_control.bam
-cell2	H3K4me2	cell2_H3K4me2.bam	cell2_control.bam
-cell1	H3K4me2	cell1_H3K4me2.bam	cell1_control.bam
-cell1	H3K4me3	cell1_H3K4me3.bam	cell1_control.bam
-cell2	H3K4me3	cell2_H3K4me3.bam	cell2_control.bam
-cell1	H3K9ac	cell1_H3K9ac.bam	cell1_control.bam
-cell2	H3K9ac	cell2_H3K9ac.bam	cell2_control.bam
-cell1	H4K20me1	cell1_H4K20me1.bam	cell1_control.bam
-cell2	H4K20me1	cell2_H4K20me1.bam	cell2_control.bam
-
-
-*/

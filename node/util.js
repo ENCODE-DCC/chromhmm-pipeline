@@ -12,7 +12,7 @@ async function read_accession(accession) {
 	return new Promise((resolve, reject) => {
 		read(
 			"/search/?" + qs.stringify({
-				searchTerm: accession,
+				accession: accession,
 				format: "json",
 			})
 		).then(
