@@ -28,6 +28,26 @@ workflow chromhmm {
     }
 }
 
+struct BamPairWithMetadata {
+    File bam
+    File? control_bam
+    String cell_type
+    String chromatin_mark
+}
+
+task make_cell_mark_file_table {
+    input {
+        Array[BamPairWithMetadata] bams
+    }
+
+    command {
+        python "$(which make_cellmarkfiletable.py)" -i ~{write_json(bams)} -o "cellmarkfiletable"
+    }
+    output {
+        File cellmarkfiletable = "cellmarkfiletable.tsv"
+    }
+}
+
 task binarize {
     Array[File] bams # when interpolated, will this give me a directory or a list?
     File chrom_sizes

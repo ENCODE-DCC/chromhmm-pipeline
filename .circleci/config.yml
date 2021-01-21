@@ -1,8 +1,3 @@
-# CircleCI 2.1 configuration file
-# for ENCODE CHROM-HMM-PIPELINE
-# Maintainer: Keshav Gurushankar
-
-# Defaults and functions
 ---
 version: 2.1
 defaults: &defaults
@@ -12,7 +7,7 @@ defaults: &defaults
 
 commands:
   make_tag:
-    description: "Make docker image tag"
+    description: Make docker image tag
     steps:
       - run: echo "export TAG=quay.io/encode-dcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" > ${BASH_ENV}
 
@@ -50,7 +45,7 @@ jobs:
             docker push quay.io/encode-dcc/chromhmm-pipeline:template
             docker logout
           no_output_timeout: 30m
-    
+
 # Workflow
 workflows:
   build_workflow:
