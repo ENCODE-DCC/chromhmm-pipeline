@@ -31,7 +31,7 @@ def process_rows(input_file: InputFile) -> List[List[str]]:
     return [process_row(row) for row in input_file.rows]
 
 
-def write_output_file(rows: List[List[str]], output_path: Path):
+def write_output_file(rows: List[List[str]], output_path: Path) -> None:
     with output_path.open("w", newline="") as f:
         spamwriter = csv.writer(f, delimiter="\t")
         spamwriter.writerows(rows)
