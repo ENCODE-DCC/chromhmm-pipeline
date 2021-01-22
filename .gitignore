@@ -3,3 +3,6 @@
 venv
 .mypy_cache
 .tox
+__pycache__
+.coverage
+*.py[cod]
