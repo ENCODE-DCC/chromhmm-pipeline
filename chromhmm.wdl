@@ -1,30 +1,32 @@
 version 1.0
-# Maintainer: Keshav Gurushankar
-
-#CAPER docker quay.io/encode-dcc/chromhmm-pipeline:1.0
-#CAPER singularity docker://quay.io/encode-dcc/chromhmm-pipeline:1.0
 
 workflow chromhmm {
-    # # if i have already generated markTable
-    File markTable
+    meta {
+        version: "0.1.0"
+        caper_docker: "quay.io/encode-dcc/chromhmm-pipeline:0.1.0"
+        caper_singularity: "docker://quay.io/encode-dcc/chromhmm-pipeline:0.1.0"
+    }
+
+    Array[BamPairWithMetadata] bams
     File chrom_sizes
-    Array[File] bams # be able to generate this from markTable
     Int states = 10
     Int bin_size = 200
 
-    call binarize {
-        input:
-            bams = bams,
-            markTable = markTable,
-            bin_size = bin_size,
-            chrom_sizes = chrom_sizes
+    call make_cellmarkfiletable { input:
+        bams = write_json(bams)
     }
 
-    call model {
-        input:
-            binarized = binarize.binarized,
-            bin_size = bin_size,
-            states = states
+    call binarize { input:
+        bams = bams,
+        cellmarkfiletable = make_cellmarkfiletable.cellmarkfiletable,
+        bin_size = bin_size,
+        chrom_sizes = chrom_sizes
+    }
+
+    call model { input:
+        binarized = binarize.binarized,
+        bin_size = bin_size,
+        states = states
     }
 }
 
@@ -35,29 +37,31 @@ struct BamPairWithMetadata {
     String chromatin_mark
 }
 
-task make_cell_mark_file_table {
+task make_cellmarkfiletable {
     input {
-        Array[BamPairWithMetadata] bams
+        File bams
+        String? output_filename = "cellmarkfiletable.tsv"
     }
 
     command {
-        python "$(which make_cellmarkfiletable.py)" -i ~{write_json(bams)} -o "cellmarkfiletable"
+        python "$(which make_cellmarkfiletable.py)" -i ~{bams} -o ~{output_filename}
     }
+
     output {
-        File cellmarkfiletable = "cellmarkfiletable.tsv"
+        File cellmarkfiletable = "~{output_filename}"
     }
 }
 
 task binarize {
     Array[File] bams # when interpolated, will this give me a directory or a list?
     File chrom_sizes
-    File markTable
+    File cellmarkfiletable
     Int bin_size
 
     command {
         mkdir /bams
         mv ~{sep=' /bams/; mv ' bams} /bams/
-        java -Xmx20G -jar /ChromHMM/ChromHMM.jar BinarizeBam -b ~{bin_size} -gzip ~{chrom_sizes} /bams/ ~{markTable} binarize
+        java -Xmx20G -jar /ChromHMM/ChromHMM.jar BinarizeBam -b ~{bin_size} -gzip ~{chrom_sizes} /bams/ ~{cellmarkfiletable} binarize
     }
 
     output {
