@@ -7,17 +7,26 @@ workflow chromhmm {
         caper_singularity: "docker://quay.io/encode-dcc/chromhmm-pipeline:0.1.0"
     }
 
-    Array[BamPairWithMetadata] bams
-    File chrom_sizes
-    Int states = 10
-    Int bin_size = 200
+    input {
+        Array[BamPairWithMetadata] bams
+        File chrom_sizes
+        Int states = 10
+        Int bin_size = 200
+    }
 
     call make_cellmarkfiletable { input:
         bams = write_json(bams)
     }
 
+   # Adapted from https://github.com/openwdl/wdl/issues/203#issuecomment-580002994
+    scatter(bam in bams) {
+        File bams_ = bam.bam
+        File? control_bams = bam.control_bam
+    }
+    Array[File] all_bams = flatten([bams_, select_all(control_bams)])
+
     call binarize { input:
-        bams = bams,
+        bams = all_bams,
         cellmarkfiletable = make_cellmarkfiletable.cellmarkfiletable,
         bin_size = bin_size,
         chrom_sizes = chrom_sizes
@@ -53,14 +62,14 @@ task make_cellmarkfiletable {
 }
 
 task binarize {
-    Array[File] bams # when interpolated, will this give me a directory or a list?
+    Array[File] bams
     File chrom_sizes
     File cellmarkfiletable
     Int bin_size
 
     command {
         mkdir /bams
-        mv ~{sep=' /bams/; mv ' bams} /bams/
+        mv ~{sep=' ' bams} /bams/
         java -Xmx20G -jar /ChromHMM/ChromHMM.jar BinarizeBam -b ~{bin_size} -gzip ~{chrom_sizes} /bams/ ~{cellmarkfiletable} binarize
     }
 

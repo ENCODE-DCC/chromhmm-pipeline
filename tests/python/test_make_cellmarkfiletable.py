@@ -17,16 +17,14 @@ runner = CliRunner()
 @pytest.mark.filesystem
 def test_app(tmp_path):
     fake_input = tmp_path / "input.json"
-    fake_data = {
-        "rows": [
-            {
-                "bam": "/foo/bar.bam",
-                "control_bam": "/bar/baz.bam",
-                "chromatin_mark": "mark",
-                "cell_type": "lung",
-            },
-        ]
-    }
+    fake_data = [
+        {
+            "bam": "/foo/bar.bam",
+            "control_bam": "/bar/baz.bam",
+            "chromatin_mark": "mark",
+            "cell_type": "lung",
+        },
+    ]
     fake_input.write_text(json.dumps(fake_data))
     result = runner.invoke(
         app, ["-i", str(fake_input), "-o", str(tmp_path / "output.txt")]
@@ -55,24 +53,20 @@ def test_process_row_control_is_none():
 
 def test_process_rows():
     input_file = InputFile.parse_obj(
-        {
-            "rows": [
-                {
-                    "bam": "/foo/bar.bam",
-                    "control_bam": "/bar/baz.bam",
-                    "chromatin_mark": "mark",
-                    "cell_type": "lung",
-                },
-                {
-                    "bam": "/quux/corge.bam",
-                    "control_bam": "/grault/eggs.bam",
-                    "chromatin_mark": "histone",
-                    "cell_type": "liver",
-                },
-            ]
-        }
+        [
+            {
+                "bam": "/foo/bar.bam",
+                "control_bam": "/bar/baz.bam",
+                "chromatin_mark": "mark",
+                "cell_type": "lung",
+            },
+            {
+                "bam": "/quux/corge.bam",
+                "control_bam": None,
+                "chromatin_mark": "histone",
+                "cell_type": "liver",
+            },
+        ]
     )
     result = process_rows(input_file)
     assert len(result) == 2
-    assert isinstance(result[0], list)
-    assert isinstance(result[1], list)

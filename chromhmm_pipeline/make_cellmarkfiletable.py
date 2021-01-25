@@ -16,7 +16,16 @@ class BamPairWithMetadata(BaseModel):
 
 
 class InputFile(BaseModel):
-    rows: List[BamPairWithMetadata]
+    """
+    See https://github.com/samuelcolvin/pydantic/issues/675#issuecomment-513029543 for
+    details on the __root__ trick, allows to directly parse List.
+    """
+
+    __root__: List[BamPairWithMetadata]
+
+    @property
+    def rows(self) -> List[BamPairWithMetadata]:
+        return self.__root__
 
 
 def process_row(bam_pair: BamPairWithMetadata) -> List[str]:
