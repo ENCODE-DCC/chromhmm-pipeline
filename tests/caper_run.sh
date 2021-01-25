@@ -22,7 +22,12 @@ INPUT=$2
 
 echo "Running caper with WDL ${WDL}, input ${INPUT}, and image ${CHROMHMM_DOCKER_IMAGE_TAG}"
 
-caper run "${WDL}" -i "${INPUT}" --docker "${CHROMHMM_DOCKER_IMAGE_TAG}" -o ./tests/pytest_workflow_options.json
+caper run "${WDL}" \
+    -i "${INPUT}" \
+    --docker "${CHROMHMM_DOCKER_IMAGE_TAG}" \
+    -o ./tests/pytest_workflow_options.json \
+    --cromwell https://github.com/broadinstitute/cromwell/releases/download/55/cromwell-55.jar \
+    --womtool https://github.com/broadinstitute/cromwell/releases/download/55/womtool-55.jar
 
 if [[ -f "cromwell.out" ]]; then
     cat cromwell.out
