@@ -118,6 +118,7 @@ jobs:
       - run:
           name: Run pytest-workflow WDL tests using tox
           command: |
+            cd /opt/circleci/.pyenv/plugins/python-build/../.. && git pull && cd -
             pyenv install 3.9.1
             pyenv global 3.9.1
             pip install --upgrade pip
