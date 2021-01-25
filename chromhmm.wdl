@@ -3,8 +3,8 @@ version 1.0
 workflow chromhmm {
     meta {
         version: "0.1.0"
-        caper_docker: "quay.io/encode-dcc/chromhmm-pipeline:0.1.0"
-        caper_singularity: "docker://quay.io/encode-dcc/chromhmm-pipeline:0.1.0"
+        caper_docker: "encodedcc/chromhmm-pipeline:0.1.0"
+        caper_singularity: "docker://encodedcc/chromhmm-pipeline:0.1.0"
     }
 
     input {
