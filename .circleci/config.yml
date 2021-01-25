@@ -184,12 +184,14 @@ workflows:
             - build
             - lint
       - push_tag:
+          name: push_template_tag
           is_release: false
           requires:
             - lint
             - build
             - test_py39
       - push_tag:
+          name: push_release_tag
           is_release: true
           requires:
             - lint
