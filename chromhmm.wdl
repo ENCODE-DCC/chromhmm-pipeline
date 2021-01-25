@@ -1,5 +1,12 @@
 version 1.0
 
+struct BamPairWithMetadata {
+    File bam
+    File? control_bam
+    String cell_type
+    String chromatin_mark
+}
+
 workflow chromhmm {
     meta {
         version: "0.1.0"
@@ -39,13 +46,6 @@ workflow chromhmm {
     }
 }
 
-struct BamPairWithMetadata {
-    File bam
-    File? control_bam
-    String cell_type
-    String chromatin_mark
-}
-
 task make_cellmarkfiletable {
     input {
         File bams
@@ -62,10 +62,12 @@ task make_cellmarkfiletable {
 }
 
 task binarize {
-    Array[File] bams
-    File chrom_sizes
-    File cellmarkfiletable
-    Int bin_size
+    input {
+        Array[File] bams
+        File chrom_sizes
+        File cellmarkfiletable
+        Int bin_size
+    }
 
     command {
         mkdir /bams
@@ -86,9 +88,11 @@ task binarize {
 }
 
 task model {
-    Array[File] binarized
-    Int bin_size
-    Int states
+    input {
+        Array[File] binarized
+        Int bin_size
+        Int states
+    }
 
     command {
         mkdir /binarized
