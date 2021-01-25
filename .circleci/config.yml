@@ -190,6 +190,8 @@ workflows:
             - lint
             - build
             - test_py39
+            - test_wdl_unit
+            - test_wdl_integration
       - push_tag:
           name: push_release_tag
           is_release: true
@@ -197,6 +199,8 @@ workflows:
             - lint
             - build
             - test_py39
+            - test_wdl_unit
+            - test_wdl_integration
           filters:
             branches:
               only:
