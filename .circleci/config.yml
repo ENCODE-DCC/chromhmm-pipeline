@@ -20,17 +20,17 @@ commands:
   make_tag:
     description: Make docker image tag
     steps:
-      - run: echo "export TAG=encodedcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" > ${BASH_ENV}
+      - run: echo "export TAG=encodedcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" >> ${BASH_ENV}
 
   make_template_tag:
     description: Make docker template tag for push
     steps:
-      - run: echo "export TAG_TO_PUSH=encodedcc/${CIRCLE_PROJECT_REPONAME}:template" > ${BASH_ENV}
+      - run: echo "export TAG_TO_PUSH=encodedcc/${CIRCLE_PROJECT_REPONAME}:template" >> ${BASH_ENV}
 
   make_release_tag:
     description: Make docker release tag for push
     steps:
-      - run: echo "export TAG_TO_PUSH=encodedcc/${CIRCLE_PROJECT_REPONAME}:${PIPELINE_VERSION}" > ${BASH_ENV}
+      - run: echo "export TAG_TO_PUSH=encodedcc/${CIRCLE_PROJECT_REPONAME}:${PIPELINE_VERSION}" >> ${BASH_ENV}
 
   run_tox:
     description: Install and run tox with a given environment
@@ -68,7 +68,7 @@ commands:
       - run:
           command: |
             source ${BASH_ENV}
-            docker pull $TAG
+            docker pull ${TAG}
             docker login -u=${DOCKERHUB_USER} -p=${DOCKERHUB_PASS}
             docker tag ${TAG} ${TAG_TO_PUSH}
             docker push ${TAG_TO_PUSH}
@@ -175,6 +175,7 @@ workflows:
           name: test_wdl_unit
           tag: unit
           num_parallel_workflows: 8
+          resource_class: large
           requires:
             - build
             - lint
@@ -182,6 +183,7 @@ workflows:
           name: test_wdl_integration
           tag: integration
           num_parallel_workflows: 8
+          resource_class: large
           requires:
             - build
             - lint
