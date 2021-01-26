@@ -1,22 +1,129 @@
-# CircleCI 2.1 configuration file
-# for ENCODE CHROM-HMM-PIPELINE
-# Maintainer: Keshav Gurushankar
-
-# Defaults and functions
 ---
 version: 2.1
+
 defaults: &defaults
   docker:
-    - image: circleci/buildpack-deps:xenial-scm
+    - image: cimg/base:2020.01
+  working_directory: ~/chromhmm-pipeline
+
+py39: &py39
+  docker:
+    - image: cimg/python:3.9.1
+  working_directory: ~/chromhmm-pipeline
+
+machine_defaults: &machine_defaults
+  machine:
+    image: ubuntu-2004:202010-01
   working_directory: ~/chromhmm-pipeline
 
 commands:
   make_tag:
-    description: "Make docker image tag"
+    description: Make docker image tag
     steps:
-      - run: echo "export TAG=quay.io/encode-dcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" > ${BASH_ENV}
+      - run: echo "export TAG=encodedcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" >> ${BASH_ENV}
+
+  make_template_tag:
+    description: Make docker template tag for push
+    steps:
+      - run: echo "export TAG_TO_PUSH=encodedcc/${CIRCLE_PROJECT_REPONAME}:template" >> ${BASH_ENV}
+
+  make_release_tag:
+    description: Make docker release tag for push
+    steps:
+      - run: echo "export TAG_TO_PUSH=encodedcc/${CIRCLE_PROJECT_REPONAME}:${PIPELINE_VERSION}" >> ${BASH_ENV}
+
+  run_tox:
+    description: Install and run tox with a given environment
+    parameters:
+      toxenv:
+        description: The name of the environment as per tox.ini, e.g. py39 or lint
+        type: string
+      extra_args:
+        description: Extra arguments that are consumed only when running pytest
+        type: string
+        default: ''
+    steps:
+      - run: pip install tox
+      - run: tox -e << parameters.toxenv >> -- << parameters.extra_args >>
+
+  set_environment_variables:
+    description: Set docker image env vars for builds and WDL test runs
+    steps:
+      - run:
+          command: |
+            echo "export CHROMHMM_DOCKER_IMAGE_TAG=encodedcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" >> ${BASH_ENV}
+
+  get_pipeline_version:
+    description: get pipeline version from __init__.py
+    steps:
+      - run:
+          command: |
+            PIPELINE_VERSION=$(python3 -c "import chromhmm_pipeline;print(chromhmm_pipeline.__version__)")
+            echo "export PIPELINE_VERSION=${PIPELINE_VERSION}" >> ${BASH_ENV}
+
+  push_image:
+    description: push image using value of TAG_TO_PUSH environment variable
+    steps:
+      - run:
+          command: |
+            source ${BASH_ENV}
+            docker pull ${TAG}
+            docker login -u=${DOCKERHUB_USER} -p=${DOCKERHUB_PASS}
+            docker tag ${TAG} ${TAG_TO_PUSH}
+            docker push ${TAG_TO_PUSH}
+            docker logout
+          no_output_timeout: 30m
 
 jobs:
+  lint:
+    <<: *py39
+    steps:
+      - checkout
+      - run_tox:
+          toxenv: lint
+
+  test_py39:
+    <<: *py39
+    steps:
+      - checkout
+      - run_tox:
+          toxenv: py39
+
+  coverage_report:
+    <<: *py39
+    steps:
+      - checkout
+      - run_tox:
+          toxenv: coverage-report
+
+  test_wdl:
+    <<: *machine_defaults
+    description: Generic testing protocol for wdl tasks
+    parameters:
+      tag:
+        description: pytest-workflow tag, e.g. functional, integration, test_align
+        type: string
+      num_parallel_workflows:
+        description: Max number of tests to execute in parallel
+        type: integer
+      resource_class:
+        description: The machine resource class to run the test with
+        type: string
+        default: medium
+    resource_class: << parameters.resource_class >>
+    steps:
+      - checkout
+      - set_environment_variables
+      - run:
+          name: Run pytest-workflow WDL tests using tox
+          command: |
+            cd /opt/circleci/.pyenv/plugins/python-build/../.. && git pull && cd -
+            pyenv install 3.9.1
+            pyenv global 3.9.1
+            pip install --upgrade pip
+            pip install tox
+            tox -e wdl -- --tag << parameters.tag >> --wt << parameters.num_parallel_workflows >>
+
   build:
     <<: *defaults
     steps:
@@ -28,34 +135,78 @@ jobs:
           command: |
             source ${BASH_ENV}
             echo "pulling template!"
-            docker pull quay.io/encode-dcc/chromhmm-pipeline:template
-            docker login -u=${QUAY_ROBOT_USER} -p=${QUAY_ROBOT_USER_TOKEN} quay.io
-            docker build --cache-from quay.io/encode-dcc/chromhmm-pipeline:template --build-arg GIT_COMMIT_HASH=${CIRCLE_SHA1} --build-arg BRANCH=${CIRCLE_BRANCH} --build-arg BUILD_TAG=${TAG} -t $TAG .
-             docker push $TAG
-             docker logout
+            docker pull encodedcc/chromhmm-pipeline:template
+            docker login -u=${DOCKERHUB_USER} -p=${DOCKERHUB_PASS}
+            docker build --cache-from encodedcc/chromhmm-pipeline:template -t $TAG .
+            docker push $TAG
+            docker logout
           no_output_timeout: 30m
 
-  push_template:
+  push_tag:
     <<: *defaults
+    parameters:
+      is_release:
+        type: boolean
+        default: false
     steps:
       - checkout
       - setup_remote_docker
       - make_tag
-      - run:
-          command: |
-            source ${BASH_ENV}
-            docker pull $TAG
-            docker login -u=${QUAY_ROBOT_USER} -p=${QUAY_ROBOT_USER_TOKEN} quay.io
-            docker tag $TAG quay.io/encode-dcc/chromhmm-pipeline:template
-            docker push quay.io/encode-dcc/chromhmm-pipeline:template
-            docker logout
-          no_output_timeout: 30m
-    
-# Workflow
+      - when:
+          condition: <<parameters.is_release>>
+          steps:
+            - get_pipeline_version
+            - make_release_tag
+      - unless:
+          condition: <<parameters.is_release>>
+          steps:
+            - make_template_tag
+      - push_image
+
 workflows:
+  version: 2
   build_workflow:
     jobs:
+      - lint
       - build
-      - push_template:
+      - test_py39
+      - coverage_report
+      - test_wdl:
+          name: test_wdl_unit
+          tag: unit
+          num_parallel_workflows: 8
+          resource_class: large
           requires:
             - build
+            - lint
+      - test_wdl:
+          name: test_wdl_integration
+          tag: integration
+          num_parallel_workflows: 8
+          resource_class: large
+          requires:
+            - build
+            - lint
+      - push_tag:
+          name: push_template_tag
+          is_release: false
+          requires:
+            - lint
+            - build
+            - test_py39
+            - test_wdl_unit
+            - test_wdl_integration
+      - push_tag:
+          name: push_release_tag
+          is_release: true
+          requires:
+            - lint
+            - build
+            - test_py39
+            - test_wdl_unit
+            - test_wdl_integration
+          filters:
+            branches:
+              only:
+                - dev
+                - master

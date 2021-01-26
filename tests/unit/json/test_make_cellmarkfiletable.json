@@ -1,0 +1,10 @@
+{
+  "test_make_cellmarkfiletable.bams": [
+    {
+      "bam": "tests/data/dummy.txt",
+      "cell_type": "liver",
+      "chromatin_mark": "H3K4me3",
+      "control_bam": "tests/data/dummy.txt"
+    }
+  ]
+}

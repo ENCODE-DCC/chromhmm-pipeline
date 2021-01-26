@@ -1,0 +1,11 @@
+---
+  - name: test_make_cellmarkfiletable
+    tags:
+      - integration
+    command: >-
+      tests/caper_run.sh
+      tests/integration/wdl/test_make_cellmarkfiletable.wdl
+      tests/integration/json/test_make_cellmarkfiletable.json
+    files:
+      - path: test-output/cellmarkfiletable.tsv
+        md5sum: 525301069a34cd188effaa2c5b1530c6

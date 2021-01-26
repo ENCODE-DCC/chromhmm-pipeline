@@ -1,0 +1,13 @@
+---
+  - name: test_make_cellmarkfiletable_unit
+    tags:
+      - unit
+    command: >-
+      tests/caper_run.sh
+      tests/unit/wdl/test_make_cellmarkfiletable.wdl
+      tests/unit/json/test_make_cellmarkfiletable.json
+    stdout:
+      contains:
+        - cellmarkfiletable.py
+        - .json
+        - cellmarkfiletable.tsv
