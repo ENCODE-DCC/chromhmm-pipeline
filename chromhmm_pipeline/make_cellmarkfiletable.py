@@ -1,6 +1,6 @@
 import csv
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 
 import typer
 from pydantic import BaseModel
@@ -10,7 +10,7 @@ app = typer.Typer()
 
 class BamPairWithMetadata(BaseModel):
     bam: str
-    control_bam: Optional[str] = None
+    control_bam: str
     cell_type: str
     chromatin_mark: str
 

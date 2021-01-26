@@ -43,14 +43,6 @@ def test_process_row():
     assert result == ["K562", "H3K27ac", "bar.bam", "qux.bam"]
 
 
-def test_process_row_control_is_none():
-    row = BamPairWithMetadata(
-        bam="/foo/bar.bam", control_bam=None, chromatin_mark="H3K27ac", cell_type="K562"
-    )
-    result = process_row(row)
-    assert result == ["K562", "H3K27ac", "bar.bam", ""]
-
-
 def test_process_rows():
     input_file = InputFile.parse_obj(
         [
@@ -62,7 +54,7 @@ def test_process_rows():
             },
             {
                 "bam": "/quux/corge.bam",
-                "control_bam": None,
+                "control_bam": "cool.bam",
                 "chromatin_mark": "histone",
                 "cell_type": "liver",
             },

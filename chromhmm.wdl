@@ -2,7 +2,7 @@ version 1.0
 
 struct BamPairWithMetadata {
     File bam
-    File? control_bam
+    File control_bam
     String cell_type
     String chromatin_mark
 }
@@ -15,22 +15,22 @@ workflow chromhmm {
     }
 
     input {
-        Array[BamPairWithMetadata] bams
+        Array[BamPairWithMetadata] bam_pairs
         File chrom_sizes
         Int states = 10
         Int bin_size = 200
     }
 
     call make_cellmarkfiletable { input:
-        bams = write_json(bams)
+        bams = write_json(bam_pairs)
     }
 
    # Adapted from https://github.com/openwdl/wdl/issues/203#issuecomment-580002994
-    scatter(bam in bams) {
-        File bams_ = bam.bam
-        File? control_bams = bam.control_bam
+    scatter(bam_pair in bam_pairs) {
+        File bams = bam_pair.bam
+        File control_bams = bam_pair.control_bam
     }
-    Array[File] all_bams = flatten([bams_, select_all(control_bams)])
+    Array[File] all_bams = flatten([bams, control_bams])
 
     call binarize { input:
         bams = all_bams,
