@@ -64,7 +64,6 @@ commands:
   push_image:
     description: push image using value of TAG_TO_PUSH environment variable
     steps:
-      - make_tag
       - run:
           command: |
             source ${BASH_ENV}
