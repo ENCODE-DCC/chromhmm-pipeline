@@ -8,4 +8,4 @@
       tests/integration/json/test_make_cellmarkfiletable.json
     files:
       - path: test-output/cellmarkfiletable.tsv
-        md5sum: e94b3e8ccea1825d307e7a582bea1284
+        md5sum: 525301069a34cd188effaa2c5b1530c6
