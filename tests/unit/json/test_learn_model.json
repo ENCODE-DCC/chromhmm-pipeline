@@ -1,0 +1,9 @@
+{
+  "test_learn_model.assembly": "my_assembly",
+  "test_learn_model.bin_size": 100,
+  "test_learn_model.binarized": [
+    "tests/data/dummy.txt",
+    "tests/data/dummy2.txt"
+  ],
+  "test_learn_model.num_states": 10
+}

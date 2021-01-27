@@ -6,11 +6,14 @@ LABEL maintainer.email "encode-help@lists.stanford.edu"
 RUN mkdir -p /usr/share/man/man1
 
 RUN apt update && \
-    apt install -y default-jre && \
+    apt install -y default-jre git && \
     rm -rf /var/lib/apt/lists/*
 
-ADD https://github.com/jernst98/ChromHMM/raw/515c2bf3cbdf66539228bb4dd6aba555f97675b6/ChromHMM.jar /opt/ChromHMM.jar
-RUN chmod a+rw /opt/ChromHMM.jar
+WORKDIR /opt
+
+RUN git clone https://github.com/jernst98/ChromHMM.git && \
+    chmod a+rw ChromHMM.jar && \
+    rm -rf ChromHMM.zip CHROMSIZES SAMPLEDATA_HG18 edu/mit/compbio/ChromHMM ChromHMM_manual.pdf README.md
 
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt && rm requirements.txt

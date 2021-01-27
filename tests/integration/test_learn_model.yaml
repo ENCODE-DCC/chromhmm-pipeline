@@ -1,0 +1,31 @@
+---
+  - name: test_learn_model
+    tags:
+      - integration
+    command: >-
+      tests/caper_run.sh
+      tests/integration/wdl/test_learn_model.wdl
+      tests/integration/json/test_learn_model.json
+    files:
+      - path: test-output/dm3_2_segments.bed.gz
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/dm3_2_dense.bed.gz
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/dm3_2_expanded.bed.gz
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/transitions_2.txt
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/transitions_2.png
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/transitions_2.svg
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/emissions_2.txt
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/emissions_2.png
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/emissions_2.svg
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/model_2.txt
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/webpage_2.txt
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
