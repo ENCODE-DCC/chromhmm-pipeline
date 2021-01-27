@@ -70,9 +70,12 @@ task binarize {
     }
 
     command {
-        mkdir /bams
-        mv ~{sep=' ' bams} /bams/
-        java -Xmx20G -jar /ChromHMM/ChromHMM.jar BinarizeBam -b ~{bin_size} -gzip ~{chrom_sizes} /bams/ ~{cellmarkfiletable} binarize
+        mkdir bams
+        mv ~{sep=' ' bams} bams
+        java -Xmx20G -jar /opt/ChromHMM.jar BinarizeBam \
+            -b ~{bin_size} \
+            -gzip \
+            ~{chrom_sizes} bams ~{cellmarkfiletable} binarize
     }
 
     output {
@@ -97,7 +100,7 @@ task model {
     command {
         mkdir /binarized
         mv ~{sep=' /binarized/; mv ' binarized} /binarized/
-        java -Xmx20G -jar /ChromHMM/ChromHMM.jar LearnModel -b ~{bin_size} -p 0 /binarized OUTPUT ~{states} hg38
+        java -Xmx20G -jar /opt/ChromHMM.jar LearnModel -b ~{bin_size} -p 0 /binarized OUTPUT ~{states} hg38
      }
 
     output {

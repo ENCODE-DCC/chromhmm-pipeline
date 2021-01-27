@@ -1,0 +1,14 @@
+---
+  - name: test_binarize_unit
+    tags:
+      - unit
+    command: >-
+      tests/caper_run.sh
+      tests/unit/wdl/test_binarize.wdl
+      tests/unit/json/test_binarize.json
+    stdout:
+      contains:
+        - -b 100
+      contains_regex:
+        - '.*dummy\.txt .*dummy2\.txt'
+        - '.*dummy\.txt bams .*dummy\.txt binarize'
