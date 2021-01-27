@@ -22,7 +22,7 @@ workflow chromhmm {
     }
 
     call make_cellmarkfiletable { input:
-        bams = write_json(bam_pairs)
+        bams = write_json(bam_pairs),
     }
 
    # Adapted from https://github.com/openwdl/wdl/issues/203#issuecomment-580002994
@@ -36,13 +36,13 @@ workflow chromhmm {
         bams = all_bams,
         cellmarkfiletable = make_cellmarkfiletable.cellmarkfiletable,
         bin_size = bin_size,
-        chrom_sizes = chrom_sizes
+        chrom_sizes = chrom_sizes,
     }
 
     call model { input:
         binarized = binarize.binarized,
         bin_size = bin_size,
-        states = states
+        states = states,
     }
 }
 
