@@ -10,6 +10,7 @@ RUN apt update && \
     rm -rf /var/lib/apt/lists/*
 
 ADD https://github.com/jernst98/ChromHMM/raw/515c2bf3cbdf66539228bb4dd6aba555f97675b6/ChromHMM.jar /opt/ChromHMM.jar
+RUN chmod a+rw /opt/ChromHMM.jar
 
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt && rm requirements.txt
