@@ -74,7 +74,7 @@ task binarize {
     command {
         mkdir bams
         mv ~{sep=' ' bams} bams
-        java -Xmx20G -jar /opt/ChromHMM.jar BinarizeBam \
+        java -Xmx20G -jar /opt/ChromHMM/ChromHMM.jar BinarizeBam \
             -b ~{bin_size} \
             -gzip \
             ~{chrom_sizes} bams ~{cellmarkfiletable} binarize
@@ -103,7 +103,7 @@ task learn_model {
     command {
         mkdir /binarized
         mv ~{sep=' ' binarized} /binarized
-        java -Xmx20G -jar /opt/ChromHMM.jar LearnModel \
+        java -Xmx20G -jar /opt/ChromHMM/ChromHMM.jar LearnModel \
             -b ~{bin_size} \
             -p 0 \
             -gzip \
