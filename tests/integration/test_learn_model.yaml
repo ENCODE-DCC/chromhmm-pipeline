@@ -7,43 +7,43 @@
       tests/integration/wdl/test_learn_model.wdl
       tests/integration/json/test_learn_model.json
     files:
-      - path: test-output/dm3_2_segments.bed.gz
+      - path: test-output/output/dm3_2_segments.bed.gz
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/dm3_2_dense.bed.gz
+      - path: test-output/output/dm3_2_dense.bed.gz
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/dm3_2_expanded.bed.gz
+      - path: test-output/output/dm3_2_expanded.bed.gz
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/dm3_2_overlap.txt
+      - path: test-output/output/dm3_2_overlap.txt
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/dm3_2_overlap.png
+      - path: test-output/output/dm3_2_overlap.png
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/dm3_2_overlap.svg
+      - path: test-output/output/dm3_2_overlap.svg
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/dm3_2_RefSeqTES_neighborhood.txt
+      - path: test-output/output/dm3_2_RefSeqTES_neighborhood.txt
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/dm3_2_RefSeqTES_neighborhood.png
+      - path: test-output/output/dm3_2_RefSeqTES_neighborhood.png
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/dm3_2_RefSeqTES_neighborhood.svg
+      - path: test-output/output/dm3_2_RefSeqTES_neighborhood.svg
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/dm3_2_RefSeqTSS_neighborhood.txt
+      - path: test-output/output/dm3_2_RefSeqTSS_neighborhood.txt
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/dm3_2_RefSeqTSS_neighborhood.png
+      - path: test-output/output/dm3_2_RefSeqTSS_neighborhood.png
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/dm3_2_RefSeqTSS_neighborhood.svg
+      - path: test-output/output/dm3_2_RefSeqTSS_neighborhood.svg
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/transitions_2.txt
+      - path: test-output/output/transitions_2.txt
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/transitions_2.png
+      - path: test-output/output/transitions_2.png
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/transitions_2.svg
+      - path: test-output/output/transitions_2.svg
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/emissions_2.txt
+      - path: test-output/output/emissions_2.txt
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/emissions_2.png
+      - path: test-output/output/emissions_2.png
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/emissions_2.svg
+      - path: test-output/output/emissions_2.svg
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/model_2.txt
+      - path: test-output/output/model_2.txt
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
-      - path: test-output/webpage_2.txt
+      - path: test-output/output/webpage_2.txt
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
