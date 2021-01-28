@@ -8,6 +8,6 @@
       tests/functional/json/test_chromhmm.json
     files:
       - path: test-output/glob-010cecdd02c943d25bd26d70b71cae89/memory_t_chr1_binary.txt.gz
-        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+        md5sum: d0da45fbc6e3d3113fb6a10af91a2b20
       - path: test-output/output/memory_t_2_segments.bed.gz
-        md5sum: 9074087c04357724969fbf9ce52798e5
+        md5sum: 712a343bb2a287e02ab8f5ded7963f18

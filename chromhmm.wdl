@@ -40,7 +40,8 @@ workflow chromhmm {
         chrom_sizes = chrom_sizes,
     }
 
-    # Assumes cell types are all the same.
+    # Assumes cell types are all the same. Only affects the task outputs, outputs for
+    # all cell types will be available in the task execution directory.
     String cell_type = bam_pairs[0].cell_type
 
     call learn_model { input:
