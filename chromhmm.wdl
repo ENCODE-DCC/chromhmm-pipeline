@@ -101,13 +101,13 @@ task learn_model {
     }
 
     command {
-        mkdir /binarized
-        mv ~{sep=' ' binarized} /binarized
+        mkdir binarized
+        mv ~{sep=' ' binarized} binarized
         java -Xmx20G -jar /opt/ChromHMM/ChromHMM.jar LearnModel \
             -b ~{bin_size} \
             -p 0 \
             -gzip \
-            /binarized output ~{num_states} ~{assembly}
+            binarized output ~{num_states} ~{assembly}
      }
 
     output {
