@@ -40,11 +40,16 @@ workflow chromhmm {
         chrom_sizes = chrom_sizes,
     }
 
+    # Assumes cell types are all the same. Only affects the task outputs, outputs for
+    # all cell types will be available in the task execution directory.
+    String cell_type = bam_pairs[0].cell_type
+
     call learn_model { input:
         binarized = binarize.binarized,
         bin_size = bin_size,
         num_states = num_states,
         assembly = assembly,
+        cell_type = cell_type,
     }
 }
 
@@ -98,6 +103,7 @@ task learn_model {
         Int bin_size
         Int num_states
         String assembly
+        String cell_type
     }
 
     command {
@@ -111,22 +117,22 @@ task learn_model {
      }
 
     output {
-       File dense_bed = "output/~{assembly}_~{num_states}_dense.bed.gz"
+       File dense_bed = "output/~{cell_type}_~{num_states}_dense.bed.gz"
        File emissions_png = "output/emissions_~{num_states}.png"
        File emissions_svg = "output/emissions_~{num_states}.svg"
        File emissions_txt = "output/emissions_~{num_states}.txt"
-       File expanded_bed = "output/~{assembly}_~{num_states}_expanded.bed.gz"
+       File expanded_bed = "output/~{cell_type}_~{num_states}_expanded.bed.gz"
        File model = "output/model_~{num_states}.txt"
-       File overlap_png = "output/~{assembly}_~{num_states}_overlap.png"
-       File overlap_svg = "output/~{assembly}_~{num_states}_overlap.svg"
-       File overlap_txt = "output/~{assembly}_~{num_states}_overlap.txt"
-       File refseq_tes_neighborhood_png = "output/~{assembly}_~{num_states}_RefSeqTES_neighborhood.png"
-       File refseq_tes_neighborhood_svg = "output/~{assembly}_~{num_states}_RefSeqTES_neighborhood.svg"
-       File refseq_tes_neighborhood_txt = "output/~{assembly}_~{num_states}_RefSeqTES_neighborhood.txt"
-       File refseq_tss_neighborhood_png = "output/~{assembly}_~{num_states}_RefSeqTSS_neighborhood.png"
-       File refseq_tss_neighborhood_svg = "output/~{assembly}_~{num_states}_RefSeqTSS_neighborhood.svg"
-       File refseq_tss_neighborhood_txt = "output/~{assembly}_~{num_states}_RefSeqTSS_neighborhood.txt"
-       File segments_bed = "output/~{assembly}_~{num_states}_segments.bed.gz"
+       File overlap_png = "output/~{cell_type}_~{num_states}_overlap.png"
+       File overlap_svg = "output/~{cell_type}_~{num_states}_overlap.svg"
+       File overlap_txt = "output/~{cell_type}_~{num_states}_overlap.txt"
+       File refseq_tes_neighborhood_png = "output/~{cell_type}_~{num_states}_RefSeqTES_neighborhood.png"
+       File refseq_tes_neighborhood_svg = "output/~{cell_type}_~{num_states}_RefSeqTES_neighborhood.svg"
+       File refseq_tes_neighborhood_txt = "output/~{cell_type}_~{num_states}_RefSeqTES_neighborhood.txt"
+       File refseq_tss_neighborhood_png = "output/~{cell_type}_~{num_states}_RefSeqTSS_neighborhood.png"
+       File refseq_tss_neighborhood_svg = "output/~{cell_type}_~{num_states}_RefSeqTSS_neighborhood.svg"
+       File refseq_tss_neighborhood_txt = "output/~{cell_type}_~{num_states}_RefSeqTSS_neighborhood.txt"
+       File segments_bed = "output/~{cell_type}_~{num_states}_segments.bed.gz"
        File transitions_png = "output/transitions_~{num_states}.png"
        File transitions_svg = "output/transitions_~{num_states}.svg"
        File transitions_txt = "output/transitions_~{num_states}.txt"

@@ -1,0 +1,14 @@
+{
+  "chromhmm.assembly": "hg38",
+  "chromhmm.bam_pairs": [
+    {
+      "bam": "tests/data/ENCFF907TIN.bam",
+      "cell_type": "memory_t",
+      "chromatin_mark": "H3K4me3",
+      "control_bam": "tests/data/ENCFF115XCR_2_percent_subsample.bam"
+    }
+  ],
+  "chromhmm.bin_size": 200,
+  "chromhmm.chrom_sizes": "tests/data/GRCh38_EBV.chrom.sizes.tsv",
+  "chromhmm.num_states": 2
+}

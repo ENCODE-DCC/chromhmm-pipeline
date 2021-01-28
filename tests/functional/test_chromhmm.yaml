@@ -1,0 +1,13 @@
+---
+  - name: test_chromhmm
+    tags:
+      - functional
+    command: >-
+      tests/caper_run.sh
+      chromhmm.wdl
+      tests/functional/json/test_chromhmm.json
+    files:
+      - path: test-output/glob-010cecdd02c943d25bd26d70b71cae89/memory_t_chr1_binary.txt.gz
+        md5sum: d0da45fbc6e3d3113fb6a10af91a2b20
+      - path: test-output/output/memory_t_2_segments.bed.gz
+        md5sum: 712a343bb2a287e02ab8f5ded7963f18

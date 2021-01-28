@@ -185,6 +185,14 @@ workflows:
           requires:
             - build
             - lint
+      - test_wdl:
+          name: test_wdl_functional
+          tag: functional
+          num_parallel_workflows: 8
+          resource_class: large
+          requires:
+            - build
+            - lint
       - push_tag:
           name: push_template_tag
           is_release: false
@@ -194,6 +202,7 @@ workflows:
             - test_py39
             - test_wdl_unit
             - test_wdl_integration
+            - test_wdl_functional
       - push_tag:
           name: push_release_tag
           is_release: true
@@ -203,6 +212,7 @@ workflows:
             - test_py39
             - test_wdl_unit
             - test_wdl_integration
+            - test_wdl_functional
           filters:
             branches:
               only:
