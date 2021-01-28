@@ -112,16 +112,25 @@ task learn_model {
 
     output {
        File dense_bed = "output/~{assembly}_~{num_states}_dense.bed.gz"
-       File expanded_bed = "output/~{assembly}_~{num_states}_expanded.bed.gz"
-       File segments_bed = "output/~{assembly}_~{num_states}_segments.bed.gz"
-       File model = "output/model_~{num_states}.txt"
-       File webpage = "output/webpage_~{num_states}.html"
        File emissions_png = "output/emissions_~{num_states}.png"
        File emissions_svg = "output/emissions_~{num_states}.svg"
        File emissions_txt = "output/emissions_~{num_states}.txt"
+       File expanded_bed = "output/~{assembly}_~{num_states}_expanded.bed.gz"
+       File model = "output/model_~{num_states}.txt"
+       File overlap_png = "output/~{assembly}_~{num_states}_overlap.png"
+       File overlap_svg = "output/~{assembly}_~{num_states}_overlap.svg"
+       File overlap_txt = "output/~{assembly}_~{num_states}_overlap.txt"
+       File refseq_tes_neighborhood_png = "output/~{assembly}_~{num_states}_RefSeqTES_neighborhood.png"
+       File refseq_tes_neighborhood_svg = "output/~{assembly}_~{num_states}_RefSeqTES_neighborhood.svg"
+       File refseq_tes_neighborhood_txt = "output/~{assembly}_~{num_states}_RefSeqTES_neighborhood.txt"
+       File refseq_tss_neighborhood_png = "output/~{assembly}_~{num_states}_RefSeqTSS_neighborhood.png"
+       File refseq_tss_neighborhood_svg = "output/~{assembly}_~{num_states}_RefSeqTSS_neighborhood.svg"
+       File refseq_tss_neighborhood_txt = "output/~{assembly}_~{num_states}_RefSeqTSS_neighborhood.txt"
+       File segments_bed = "output/~{assembly}_~{num_states}_segments.bed.gz"
        File transitions_png = "output/transitions_~{num_states}.png"
        File transitions_svg = "output/transitions_~{num_states}.svg"
        File transitions_txt = "output/transitions_~{num_states}.txt"
+       File webpage = "output/webpage_~{num_states}.html"
     }
 
     runtime {

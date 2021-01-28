@@ -13,6 +13,24 @@
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
       - path: test-output/dm3_2_expanded.bed.gz
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/dm3_2_overlap.txt
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/dm3_2_overlap.png
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/dm3_2_overlap.svg
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/dm3_2_RefSeqTES_neighborhood.txt
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/dm3_2_RefSeqTES_neighborhood.png
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/dm3_2_RefSeqTES_neighborhood.svg
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/dm3_2_RefSeqTSS_neighborhood.txt
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/dm3_2_RefSeqTSS_neighborhood.png
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/dm3_2_RefSeqTSS_neighborhood.svg
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
       - path: test-output/transitions_2.txt
         md5sum: d3e4ff318d22ba1e72262e7974aa1cee
       - path: test-output/transitions_2.png

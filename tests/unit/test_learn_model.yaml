@@ -9,6 +9,6 @@
     stdout:
       contains:
         - -b 100
-        - /binarized output 10 my_assembly
+        - binarized output 10 my_assembly
       contains_regex:
-        - 'mv .*dummy\.txt .*dummy2\.txt /binarized'
+        - 'mv .*dummy\.txt .*dummy2\.txt binarized'
