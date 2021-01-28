@@ -1,0 +1,49 @@
+---
+  - name: test_learn_model
+    tags:
+      - integration
+    command: >-
+      tests/caper_run.sh
+      tests/integration/wdl/test_learn_model.wdl
+      tests/integration/json/test_learn_model.json
+    files:
+      - path: test-output/output/dm3_2_segments.bed.gz
+        md5sum: 9074087c04357724969fbf9ce52798e5
+      - path: test-output/output/dm3_2_dense.bed.gz
+        md5sum: f7f504aec867171ab7e86ec64c441771
+      - path: test-output/output/dm3_2_expanded.bed.gz
+        md5sum: 91a7a3f82582f88398708f726f8c5f6e
+      - path: test-output/output/dm3_2_overlap.txt
+        md5sum: fef1ade9818158dbfaae4d27db3b9201
+      - path: test-output/output/dm3_2_overlap.png
+        md5sum: e7ac054958d00b9815454faf1c4423e5
+      - path: test-output/output/dm3_2_overlap.svg
+        md5sum: ed1f4058448424c6734c8dfc5b698378
+      - path: test-output/output/dm3_2_RefSeqTES_neighborhood.txt
+        md5sum: da61fdbb358c593cd5744f21d904d427
+      - path: test-output/output/dm3_2_RefSeqTES_neighborhood.png
+        md5sum: 5eaed518db79160740786e6478aa1854
+      - path: test-output/output/dm3_2_RefSeqTES_neighborhood.svg
+        md5sum: ebcd2f31681a3c09361e2f9e80e1c7d3
+      - path: test-output/output/dm3_2_RefSeqTSS_neighborhood.txt
+        md5sum: 4821851dfe3775c03e1d5d72c3d08635
+      - path: test-output/output/dm3_2_RefSeqTSS_neighborhood.png
+        md5sum: 115c76bbd6187a1a69ee45a642d55e9f
+      - path: test-output/output/dm3_2_RefSeqTSS_neighborhood.svg
+        md5sum: ef700aa6eef2a5736d41d09bc49727fb
+      - path: test-output/output/transitions_2.txt
+        md5sum: 90c3a890993cf8014db9a8eff37d2a87
+      - path: test-output/output/transitions_2.png
+        md5sum: a93d7f0b40de161d7a07d4bacf497f86
+      - path: test-output/output/transitions_2.svg
+        md5sum: eaec2c1cdfe79e04922301725a3cf0d9
+      - path: test-output/output/emissions_2.txt
+        md5sum: f2ae11080260971e1809f36cc891725c
+      - path: test-output/output/emissions_2.png
+        md5sum: 62706da613da5e68d3b7d8dd23603db0
+      - path: test-output/output/emissions_2.svg
+        md5sum: 6f3cadfff527d0fa0048997aa6cb0dd8
+      - path: test-output/output/model_2.txt
+        md5sum: 23cfe338ce769a4e15a8625e440d7689
+      - path: test-output/output/webpage_2.html
+        md5sum: a7d64dc8c6542aa9faa23285ca8626fd

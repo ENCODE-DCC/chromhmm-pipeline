@@ -1,0 +1,14 @@
+---
+  - name: test_learn_model_unit
+    tags:
+      - unit
+    command: >-
+      tests/caper_run.sh
+      tests/unit/wdl/test_learn_model.wdl
+      tests/unit/json/test_learn_model.json
+    stdout:
+      contains:
+        - -b 100
+        - binarized output 10 my_assembly
+      contains_regex:
+        - 'mv .*dummy\.txt .*dummy2\.txt binarized'

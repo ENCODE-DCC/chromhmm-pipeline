@@ -8,6 +8,6 @@ workflow test_make_cellmarkfiletable {
     }
 
     call chromhmm.make_cellmarkfiletable { input:
-        bams = write_json(bams)
+        bams = write_json(bams),
     }
 }

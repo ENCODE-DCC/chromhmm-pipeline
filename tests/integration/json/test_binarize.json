@@ -1,0 +1,8 @@
+{
+  "test_binarize.bams": [
+    "tests/data/ENCFF106RDB.bam"
+  ],
+  "test_binarize.bin_size": 100,
+  "test_binarize.cellmarkfiletable": "tests/data/cellmarkfiletable.tsv",
+  "test_binarize.chrom_sizes": "tests/data/dm3.chrom.sizes.tsv"
+}

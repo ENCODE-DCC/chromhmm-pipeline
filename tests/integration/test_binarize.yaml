@@ -1,0 +1,23 @@
+---
+  - name: test_binarize
+    tags:
+      - integration
+    command: >-
+      tests/caper_run.sh
+      tests/integration/wdl/test_binarize.wdl
+      tests/integration/json/test_binarize.json
+    files:
+      - path: test-output/glob-010cecdd02c943d25bd26d70b71cae89/dmel_chr3R_binary.txt.gz
+        md5sum: d3e4ff318d22ba1e72262e7974aa1cee
+      - path: test-output/glob-010cecdd02c943d25bd26d70b71cae89/dmel_chr3L_binary.txt.gz
+        md5sum: 14fc48ab6c15aec6062c44b917a0cccb
+      - path: test-output/glob-010cecdd02c943d25bd26d70b71cae89/dmel_chr2R_binary.txt.gz
+        md5sum: 15a81fc4bde32af7c16f37089d2bc9f7
+      - path: test-output/glob-010cecdd02c943d25bd26d70b71cae89/dmel_chrX_binary.txt.gz
+        md5sum: b6cbfc7ed2ecb77a5494d83aeb2cfd9a
+      - path: test-output/glob-010cecdd02c943d25bd26d70b71cae89/dmel_chr2L_binary.txt.gz
+        md5sum: 46050b815fe38cbf90b9159bb9531c9f
+      - path: test-output/glob-010cecdd02c943d25bd26d70b71cae89/dmel_chr4_binary.txt.gz
+        md5sum: 55d985be530a8bde2aa1544a58dd3ce8
+      - path: test-output/glob-010cecdd02c943d25bd26d70b71cae89/dmel_chrM_binary.txt.gz
+        md5sum: 4b1a9f13c0c9062613f0f7b00db69626

@@ -17,12 +17,13 @@ workflow chromhmm {
     input {
         Array[BamPairWithMetadata] bam_pairs
         File chrom_sizes
-        Int states = 10
+        String assembly
+        Int num_states = 10
         Int bin_size = 200
     }
 
     call make_cellmarkfiletable { input:
-        bams = write_json(bam_pairs)
+        bams = write_json(bam_pairs),
     }
 
    # Adapted from https://github.com/openwdl/wdl/issues/203#issuecomment-580002994
@@ -36,13 +37,14 @@ workflow chromhmm {
         bams = all_bams,
         cellmarkfiletable = make_cellmarkfiletable.cellmarkfiletable,
         bin_size = bin_size,
-        chrom_sizes = chrom_sizes
+        chrom_sizes = chrom_sizes,
     }
 
-    call model { input:
+    call learn_model { input:
         binarized = binarize.binarized,
         bin_size = bin_size,
-        states = states
+        num_states = num_states,
+        assembly = assembly,
     }
 }
 
@@ -70,9 +72,12 @@ task binarize {
     }
 
     command {
-        mkdir /bams
-        mv ~{sep=' ' bams} /bams/
-        java -Xmx20G -jar /ChromHMM/ChromHMM.jar BinarizeBam -b ~{bin_size} -gzip ~{chrom_sizes} /bams/ ~{cellmarkfiletable} binarize
+        mkdir bams
+        mv ~{sep=' ' bams} bams
+        java -Xmx20G -jar /opt/ChromHMM/ChromHMM.jar BinarizeBam \
+            -b ~{bin_size} \
+            -gzip \
+            ~{chrom_sizes} bams ~{cellmarkfiletable} binarize
     }
 
     output {
@@ -87,24 +92,47 @@ task binarize {
     }
 }
 
-task model {
+task learn_model {
     input {
         Array[File] binarized
         Int bin_size
-        Int states
+        Int num_states
+        String assembly
     }
 
     command {
-        mkdir /binarized
-        mv ~{sep=' /binarized/; mv ' binarized} /binarized/
-        java -Xmx20G -jar /ChromHMM/ChromHMM.jar LearnModel -b ~{bin_size} -p 0 /binarized OUTPUT ~{states} hg38
+        mkdir binarized
+        mv ~{sep=' ' binarized} binarized
+        java -Xmx20G -jar /opt/ChromHMM/ChromHMM.jar LearnModel \
+            -b ~{bin_size} \
+            -p 0 \
+            -gzip \
+            binarized output ~{num_states} ~{assembly}
      }
 
     output {
-       Array[File] out = glob("OUTPUT/*")
+       File dense_bed = "output/~{assembly}_~{num_states}_dense.bed.gz"
+       File emissions_png = "output/emissions_~{num_states}.png"
+       File emissions_svg = "output/emissions_~{num_states}.svg"
+       File emissions_txt = "output/emissions_~{num_states}.txt"
+       File expanded_bed = "output/~{assembly}_~{num_states}_expanded.bed.gz"
+       File model = "output/model_~{num_states}.txt"
+       File overlap_png = "output/~{assembly}_~{num_states}_overlap.png"
+       File overlap_svg = "output/~{assembly}_~{num_states}_overlap.svg"
+       File overlap_txt = "output/~{assembly}_~{num_states}_overlap.txt"
+       File refseq_tes_neighborhood_png = "output/~{assembly}_~{num_states}_RefSeqTES_neighborhood.png"
+       File refseq_tes_neighborhood_svg = "output/~{assembly}_~{num_states}_RefSeqTES_neighborhood.svg"
+       File refseq_tes_neighborhood_txt = "output/~{assembly}_~{num_states}_RefSeqTES_neighborhood.txt"
+       File refseq_tss_neighborhood_png = "output/~{assembly}_~{num_states}_RefSeqTSS_neighborhood.png"
+       File refseq_tss_neighborhood_svg = "output/~{assembly}_~{num_states}_RefSeqTSS_neighborhood.svg"
+       File refseq_tss_neighborhood_txt = "output/~{assembly}_~{num_states}_RefSeqTSS_neighborhood.txt"
+       File segments_bed = "output/~{assembly}_~{num_states}_segments.bed.gz"
+       File transitions_png = "output/transitions_~{num_states}.png"
+       File transitions_svg = "output/transitions_~{num_states}.svg"
+       File transitions_txt = "output/transitions_~{num_states}.txt"
+       File webpage = "output/webpage_~{num_states}.html"
     }
 
-     # when I gave it 100 processors, load doesnt really break 7
     runtime {
         cpu: 8
         memory: "30 GB"

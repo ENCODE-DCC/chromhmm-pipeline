@@ -1,0 +1,8 @@
+{
+  "test_learn_model.assembly": "dm3",
+  "test_learn_model.bin_size": 100,
+  "test_learn_model.binarized": [
+    "tests/data/dm3_chr2L_binary.txt.gz"
+  ],
+  "test_learn_model.num_states": 2
+}

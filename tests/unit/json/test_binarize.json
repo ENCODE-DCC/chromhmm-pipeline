@@ -1,0 +1,9 @@
+{
+  "test_binarize.bams": [
+    "tests/data/dummy.txt",
+    "tests/data/dummy2.txt"
+  ],
+  "test_binarize.bin_size": 100,
+  "test_binarize.cellmarkfiletable": "tests/data/dummy.txt",
+  "test_binarize.chrom_sizes": "tests/data/dummy.txt"
+}
